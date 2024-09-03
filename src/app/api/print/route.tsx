@@ -10,6 +10,7 @@ import { ImageResponse } from "next/og";
 import { getPostThread } from "@/app/bot/services/get-post-thread";
 import BlueskyLogo from "@/app/components/BlueskyLogo";
 import { format } from "date-fns";
+import { validateCronSecret } from "@/app/utils/validate-cron-secret";
 
 export const runtime = "edge";
 
@@ -18,6 +19,13 @@ const fontSizes = {
   sm: 24,
   md: 28,
   lg: 32,
+} as const;
+
+const sizes = {
+  CONTAINER_GAP: 25,
+  CONTAINER_PADDING_VERTICAL: 50,
+  CONTAINER_PADDING_HORIZONTAL: 100,
+  LINE: 20,
 } as const;
 
 const Flex: React.FC<
@@ -47,13 +55,14 @@ const Flex: React.FC<
 
 const Container: React.FC<PropsWithChildren> = ({ children }) => (
   <Flex
+    justify="center"
     style={{
       color: "white",
       background: "#161e26",
       width: "100%",
       height: "100%",
-      padding: "50px 100px",
-      gap: 25,
+      padding: `${sizes.CONTAINER_PADDING_VERTICAL}px ${sizes.CONTAINER_PADDING_HORIZONTAL}px`,
+      gap: sizes.CONTAINER_GAP,
       fontFamily: "Noto Sans Regular",
     }}
   >
@@ -126,8 +135,61 @@ const Text: React.FC<
   </div>
 );
 
+const Content: React.FC<{ text: string }> = ({ text }) => {
+  const lines = text.split("\n").map((line, index) => {
+    return (
+      <Text
+        key={index}
+        style={{
+          fontSize: fontSizes.lg,
+          color: "white",
+          display: "flex",
+          flexWrap: "wrap",
+          columnGap: 8,
+          width: "100%",
+          maxWidth: "100%",
+        }}
+      >
+        {line.split(/\s+/).map((word, index) => {
+          return (
+            <span
+              key={index}
+              style={{
+                ...(/^(@|#).*/.test(word) && {
+                  color: "#208bfe",
+                }),
+              }}
+            >
+              {word}
+            </span>
+          );
+        })}
+      </Text>
+    );
+  });
+
+  return (
+    <Flex
+      style={{
+        maxHeight: "100%",
+        width: "100%",
+        maxWidth: "100%",
+      }}
+    >
+      {lines}
+    </Flex>
+  );
+};
+
 export const GET = async (request: NextRequest) => {
+  try {
+    validateCronSecret(request);
+  } catch (error) {
+    return Response.json({ error: (error as Error).message }, { status: 401 });
+  }
+
   const uri = request.nextUrl.searchParams.get("uri");
+  const debug = request.nextUrl.searchParams.get("debug");
 
   if (!uri) {
     return Response.json({ error: "Invalid URI" }, { status: 400 });
@@ -152,7 +214,10 @@ export const GET = async (request: NextRequest) => {
       ? parent.post.embed?.images?.[0]?.thumb
       : undefined;
 
-  const formattedDate = format(new Date(parent.post.record.createdAt), "Pp");
+  const formattedDate = format(
+    new Date(parent.post.record.createdAt),
+    "dd MMM '•' HH:mm '(UTC)'"
+  );
 
   return new ImageResponse(
     (
@@ -171,21 +236,23 @@ export const GET = async (request: NextRequest) => {
             name={parent.post.author.displayName}
             handle={parent.post.author.handle}
           />
-          <BlueskyLogo width={100} />
+          <BlueskyLogo width={80} />
         </Flex>
         <Flex>
-          <Text>{parent.post.record.text}</Text>
+          <Content text={parent.post.record.text} />
         </Flex>
-        <div
-          style={{
-            display: "flex",
-            overflow: "hidden",
-            flex: "1 1 auto",
-            width: "100%",
-          }}
-        >
-          {thumbnail && <Thumbnail src={thumbnail} />}
-        </div>
+        {thumbnail && (
+          <div
+            style={{
+              display: "flex",
+              overflow: "hidden",
+              flex: "1 1 auto",
+              width: "100%",
+            }}
+          >
+            <Thumbnail src={thumbnail} />
+          </div>
+        )}
         <Text
           style={{
             fontSize: fontSizes.xs,
@@ -211,6 +278,7 @@ export const GET = async (request: NextRequest) => {
           style: "normal",
         },
       ],
+      debug: debug === "true",
     }
   );
 };
