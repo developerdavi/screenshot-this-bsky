@@ -101,6 +101,7 @@ export const GET = async (request: NextRequest) => {
       console.error(
         `Error processing request from @${notification.author.handle}`
       );
+      console.error(error);
       await handleError(error, notification);
     }
   }
