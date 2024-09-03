@@ -148,7 +148,7 @@ export const GET = async (request: NextRequest) => {
   const parent = thread.parent as any;
 
   const thumbnail =
-    parent.post.embed?.$type === "app.bsky.embed.images#view"
+    parent.post?.embed?.$type === "app.bsky.embed.images#view"
       ? parent.post.embed?.images?.[0]?.thumb
       : undefined;
 
