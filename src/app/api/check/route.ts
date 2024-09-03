@@ -68,6 +68,9 @@ export const GET = async (request: NextRequest) => {
       }
       const { data: image } = await axios
         .get(`${BASE_URL}/api/print`, {
+          headers: {
+            Authorization: `Bearer ${process.env.CRON_SECRET}`,
+          },
           params: {
             uri: post.uri,
           },
