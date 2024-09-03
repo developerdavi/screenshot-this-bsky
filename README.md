@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h3 align="center">
+  <a href="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:u7hglg6pwujzshicmdez4hjj/bafkreiaze7b4yswslyn7d2r7eq4xrwvm53mjimqsk4pusjvvp5wzoscone@jpeg">
+  <img src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:u7hglg6pwujzshicmdez4hjj/bafkreiaze7b4yswslyn7d2r7eq4xrwvm53mjimqsk4pusjvvp5wzoscone@jpeg" alt="Post telling that Bluesky lacks of a 'screenshot this' kind of bot" width="500">
+  </a>
+</h3>
 
 ## Getting Started
 
-First, run the development server:
+### Stack
+
+- `next`: Used for exposing serverless functions that do all the job.
+- `@atproto/api`: Official Bluesky (ATProtocol) API client.
+- Vercel: Used for hosting the project, running the serverless functions and running the cron jobs.
+
+### Setup
+
+To run this project, you need to set the following environment variables:
+
+- `BLUESKY_USERNAME`: Your Bluesky username
+- `BLUESKY_PASSWORD`: Your Bluesky password
+- `CRON_SECRET`: A secret key used to authenticate requests (optional - production usage only)
+
+It's recommended to do so by creating a `.env.local` file in the root of the project by duplicating the `.env` file and setting the environment variables.
+
+### Running the project
+
+Run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then you can start sending requests to the API.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This project exposes the following routes:
 
-## Learn More
+- `GET /api/check`: Check for new mentions and reply them with the requested screenshot.
+- `GET /api/print?uri={{POST_URI}}`: Generates a screenshot of a post.
 
-To learn more about Next.js, take a look at the following resources:
+## Limitations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- The image generation uses the `next/og` package that transforms HTML into a PNG image. It extends the funcionality of `satori`, which transforms HTML into SVG. It is limited in certain ways and does not support all HTML tags and CSS styles. See [docs](https://vercel.com/docs/functions/og-image-generation).
+- There is no realtime checks for new mentions. The API is called every minute and checks for new mentions (see [vercel.json](/vercel.json)) by using [Vercel Cron Jobs](https://vercel.com/docs/cron-jobs).
+- Bluesky API does not expose the users' timezones, so the dates are displayed with the local timezone (usually it's UTC in the production environment).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+MIT © [Davi Coelho](https://github.com/developerdavi)
