@@ -10,6 +10,10 @@ class BaseError extends Error {
   }
 }
 
-export class NotAReplyError extends BaseError {}
+export class NotAReplyError extends BaseError {
+  name = "NotAReplyError";
+}
 
-export class ImageGenerationError extends BaseError {}
+export class ImageGenerationError extends BaseError {
+  name = "ImageGenerationError";
+}
