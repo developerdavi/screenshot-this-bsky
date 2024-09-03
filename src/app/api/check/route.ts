@@ -10,7 +10,9 @@ import axios, { AxiosError } from "axios";
 export const revalidate = 0;
 
 export const GET = async (_request: Request) => {
-  const { seenAt, notifications } = await getNotifications();
+  const { notifications } = await getNotifications();
+
+  const seenAt = new Date().toISOString();
 
   for (const notification of notifications.filter((n) => !n.isRead)) {
     try {
@@ -55,9 +57,7 @@ export const GET = async (_request: Request) => {
     }
   }
 
-  await updateSeen(
-    seenAt ?? (notifications[0].seenAt as string) ?? new Date().toISOString()
-  );
+  await updateSeen(seenAt);
 
   return Response.json(notifications);
 };
