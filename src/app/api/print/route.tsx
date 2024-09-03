@@ -216,7 +216,7 @@ export const GET = async (request: NextRequest) => {
 
   const formattedDate = format(
     new Date(parent.post.record.createdAt),
-    "dd MMM '•' HH:mm '(UTC)'"
+    "dd MMM '•' HH:mm '('OOOO')'"
   );
 
   return new ImageResponse(
