@@ -6,6 +6,9 @@ import { uploadBlob } from "@/app/bot/services/upload-blob";
 import { BASE_URL } from "@/app/constants";
 import axios from "axios";
 
+// disable static page generation
+export const revalidate = 0;
+
 export const GET = async (_request: Request) => {
   const { seenAt, notifications } = await getNotifications();
 
