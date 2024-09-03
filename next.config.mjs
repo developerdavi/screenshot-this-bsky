@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: `https://bsky.app/profile/${process.env.BLUESKY_USERNAME}`,
+        destination: "https://github.com/developerdavi/screenshot-this-bsky",
         permanent: false,
       },
     ];
