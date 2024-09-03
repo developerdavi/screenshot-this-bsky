@@ -1,6 +1,6 @@
 <h3 align="center">
-  <a href="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:u7hglg6pwujzshicmdez4hjj/bafkreiaze7b4yswslyn7d2r7eq4xrwvm53mjimqsk4pusjvvp5wzoscone@jpeg">
-  <img src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:u7hglg6pwujzshicmdez4hjj/bafkreiaze7b4yswslyn7d2r7eq4xrwvm53mjimqsk4pusjvvp5wzoscone@jpeg" alt="Post telling that Bluesky lacks of a 'screenshot this' kind of bot" width="500">
+  <a href="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:u7hglg6pwujzshicmdez4hjj/bafkreify7r4nzuy7cl33nffqbu3v67qcueurvhalkqacxdm5haqo73aizq@jpeg">
+  <img src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:u7hglg6pwujzshicmdez4hjj/bafkreify7r4nzuy7cl33nffqbu3v67qcueurvhalkqacxdm5haqo73aizq@jpeg" alt="Post telling that Bluesky lacks of a 'screenshot this' kind of bot" width="500">
   </a>
 </h3>
 
