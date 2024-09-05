@@ -223,12 +223,6 @@ export const GET = async (request: NextRequest) => {
       import.meta.url
     ).toString()
   ).then((res) => res.arrayBuffer());
-  const notoSansJapanese = await fetch(
-    new URL(
-      "../../assets/fonts/NotoSans-Japanese.ttf",
-      import.meta.url
-    ).toString()
-  ).then((res) => res.arrayBuffer());
 
   const thread = await getPostThread(uri);
 
@@ -328,11 +322,6 @@ export const GET = async (request: NextRequest) => {
         {
           name: "Noto Sans Symbols2",
           data: notoSansSymbols2,
-          style: "normal",
-        },
-        {
-          name: "Noto Sans Japanese",
-          data: notoSansJapanese,
           style: "normal",
         },
       ],
