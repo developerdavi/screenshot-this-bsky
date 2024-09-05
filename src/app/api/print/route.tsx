@@ -25,8 +25,12 @@ const sizes = {
   CONTAINER_GAP: 25,
   CONTAINER_PADDING_VERTICAL: 50,
   CONTAINER_PADDING_HORIZONTAL: 100,
-  LINE: 20,
+  AVATAR_SIZE: 100,
+  LINE_HEIGHT: fontSizes.lg * 1.2,
+  IMAGE: 350,
 } as const;
+
+const AVERAGE_CHARACTERS_PER_LINE = 35;
 
 const Flex: React.FC<
   PropsWithChildren<
@@ -75,8 +79,8 @@ const Avatar: React.FC<{ src: string }> = ({ src }) => (
     alt="avatar"
     src={src}
     style={{
-      width: "100px",
-      height: "100px",
+      width: `${sizes.AVATAR_SIZE}px`,
+      height: `${sizes.AVATAR_SIZE}px`,
       borderRadius: "50%",
     }}
   />
@@ -142,6 +146,8 @@ const Content: React.FC<{ text: string }> = ({ text }) => {
         key={index}
         style={{
           fontSize: fontSizes.lg,
+          minHeight: sizes.LINE_HEIGHT,
+          lineHeight: `${sizes.LINE_HEIGHT}px`,
           color: "white",
           display: "flex",
           flexWrap: "wrap",
@@ -174,6 +180,7 @@ const Content: React.FC<{ text: string }> = ({ text }) => {
         maxHeight: "100%",
         width: "100%",
         maxWidth: "100%",
+        gap: 0,
       }}
     >
       {lines}
@@ -219,6 +226,24 @@ export const GET = async (request: NextRequest) => {
     "dd MMM '•' HH:mm '('OOOO')'"
   );
 
+  const text = parent.post.record.text as string;
+
+  const sanitizedTextLength = text.replace(/\n/g, "").length;
+  const minimumLines = text.split("\n").length;
+
+  const textHeight =
+    Math.ceil(
+      minimumLines + sanitizedTextLength / AVERAGE_CHARACTERS_PER_LINE
+    ) * sizes.LINE_HEIGHT;
+
+  const totalHeight =
+    textHeight +
+    sizes.CONTAINER_PADDING_VERTICAL * 2 +
+    sizes.AVATAR_SIZE +
+    sizes.CONTAINER_GAP * (!!thumbnail ? 3 : 2) +
+    sizes.LINE_HEIGHT +
+    (!!thumbnail ? sizes.IMAGE : 0);
+
   return new ImageResponse(
     (
       <Container>
@@ -239,7 +264,7 @@ export const GET = async (request: NextRequest) => {
           <BlueskyLogo width={80} />
         </Flex>
         <Flex>
-          <Content text={parent.post.record.text} />
+          <Content text={text} />
         </Flex>
         {thumbnail && (
           <div
@@ -265,7 +290,7 @@ export const GET = async (request: NextRequest) => {
     ),
     {
       width: 800,
-      height: !!thumbnail ? 1000 : 800,
+      height: totalHeight,
       fonts: [
         {
           name: "Noto Sans Regular",
