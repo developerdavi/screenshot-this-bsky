@@ -27,7 +27,7 @@ const sizes = {
   CONTAINER_PADDING_HORIZONTAL: 100,
   AVATAR_SIZE: 100,
   LINE_HEIGHT: fontSizes.lg * 1.2,
-  IMAGE: 350,
+  IMAGE: 400,
 } as const;
 
 const AVERAGE_CHARACTERS_PER_LINE = 35;
