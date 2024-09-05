@@ -2,8 +2,9 @@ import { Notification } from "@atproto/api/dist/client/types/app/bsky/notificati
 import { ImageGenerationError, NotAReplyError } from "../errors";
 import { getReplyData } from "../utils/get-reply-data";
 import { createPost } from "./create-post";
-import { Post } from "../types";
+import { Post, Record } from "../types";
 import { sendMessage } from "../bot/services/send-message";
+import { t } from "../dictionary/translate";
 
 export const handleError = async (
   error: unknown,
@@ -21,23 +22,20 @@ export const handleError = async (
   try {
     switch (true) {
       case error instanceof NotAReplyError:
-        await reply(
-          error.post,
-          `This post is not a reply. Please reply to a post and tag me to get a screenshot of it.`
-        );
+        await reply(error.post, t("error.notAReply", error.post.record.langs));
         break;
       case error instanceof ImageGenerationError:
         await reply(
           error.post,
-          `Failed to generate image for this post. Please report this issue. You can find more info in my bio.`
+          t("error.imageGeneration", error.post.record.langs)
         );
         break;
       default:
         await sendMessage(
           notification.author.did,
-          `Hey! An unknown error occurred while generating a screenshot for fulfilling your request.\n\n\n
-            Error: ${(error as Error).message}\n\n\n
-            Please report this issue. You can find more info in my bio.`
+          t("error.unknown", (notification.record as Record).langs, {
+            error: (error as Error).message,
+          })
         );
     }
   } catch (error) {
