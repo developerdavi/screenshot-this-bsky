@@ -211,6 +211,24 @@ export const GET = async (request: NextRequest) => {
   const notoSansBold = await fetch(
     new URL("../../assets/fonts/NotoSans-Bold.ttf", import.meta.url).toString()
   ).then((res) => res.arrayBuffer());
+  const notoSansSymbols = await fetch(
+    new URL(
+      "../../assets/fonts/NotoSans-Symbols.ttf",
+      import.meta.url
+    ).toString()
+  ).then((res) => res.arrayBuffer());
+  const notoSansSymbols2 = await fetch(
+    new URL(
+      "../../assets/fonts/NotoSans-Symbols2.ttf",
+      import.meta.url
+    ).toString()
+  ).then((res) => res.arrayBuffer());
+  const notoSansJapanese = await fetch(
+    new URL(
+      "../../assets/fonts/NotoSans-Japanese.ttf",
+      import.meta.url
+    ).toString()
+  ).then((res) => res.arrayBuffer());
 
   const thread = await getPostThread(uri);
 
@@ -300,6 +318,21 @@ export const GET = async (request: NextRequest) => {
         {
           name: "Noto Sans Bold",
           data: notoSansBold,
+          style: "normal",
+        },
+        {
+          name: "Noto Sans Symbols",
+          data: notoSansSymbols,
+          style: "normal",
+        },
+        {
+          name: "Noto Sans Symbols2",
+          data: notoSansSymbols2,
+          style: "normal",
+        },
+        {
+          name: "Noto Sans Japanese",
+          data: notoSansJapanese,
           style: "normal",
         },
       ],
